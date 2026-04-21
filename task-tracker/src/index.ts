@@ -1,4 +1,4 @@
-import { addTask, listTasks, updateTask } from "./taskLogic";
+import { addTask, deleteTask, listTasks, updateTask } from "./taskLogic";
 
 // 1. Grab the arguments the user typed
 const args = process.argv.slice(2);
@@ -29,6 +29,14 @@ switch (command) {
 
   case "list":
     listTasks(args[1]);
+    break;
+
+  case "delete":
+    if (!args[1]) {
+      console.log('Error: Please provide a task ID to delete. Example: delete 1');
+    } else {
+      deleteTask(Number(args[1]));
+    }
     break;
 
   default:

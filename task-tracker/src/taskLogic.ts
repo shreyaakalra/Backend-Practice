@@ -79,3 +79,21 @@ export const updateTask = (id: number, newDescription: string): void => {
   saveTasks(tasks);
   console.log(`Task ${id} updated successfully!`);
 };
+
+
+export const deleteTask = (id: number): void => {
+  const tasks = getTasks();
+  
+  // 1. WORK: Create a brand new array keeping ONLY the tasks that DO NOT match the target ID
+  const updatedTasks = tasks.filter(task => task.id !== id);
+
+  // 2. Edge Case: If the length is exactly the same, nothing was deleted
+  if (updatedTasks.length === tasks.length) {
+    console.log(`Error: Task with ID ${id} not found.`);
+    return;
+  }
+
+  // 3. SAVE
+  saveTasks(updatedTasks);
+  console.log(`Task ${id} deleted successfully!`);
+};
