@@ -1,4 +1,4 @@
-import { addTask } from "./taskLogic";
+import { addTask, listTasks } from "./taskLogic";
 
 // 1. Grab the arguments the user typed
 const args = process.argv.slice(2);
@@ -21,7 +21,7 @@ switch (command) {
     break;
     
   case 'list':
-    console.log('You want to list tasks!');
+    listTasks(args[1]);
     break;
     
   default:

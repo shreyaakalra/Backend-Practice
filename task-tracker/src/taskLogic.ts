@@ -35,3 +35,24 @@ export const addTask = (description: string): void => {
   // 7. Print a success message for the user!
   console.log(`Task added successfully (ID: ${newId})`);
 };
+
+
+export const listTasks = (filterStatus?: string): void => {
+  // 1. READ: Grab all tasks from the memory
+  const tasks = getTasks();
+
+  // 2. Filter the tasks if the user asked for a specific status
+  let filteredTasks = tasks;
+  if (filterStatus) {
+    filteredTasks = tasks.filter(task => task.status === filterStatus);
+  }
+
+  // 3. Edge Case: What if the list is empty?
+  if (filteredTasks.length === 0) {
+    console.log('No tasks found.');
+    return;
+  }
+
+  // 4. Print them beautifully to the terminal
+  console.table(filteredTasks, ['id', 'description', 'status']);
+};
