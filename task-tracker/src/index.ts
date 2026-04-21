@@ -1,3 +1,5 @@
+import { addTask } from "./taskLogic";
+
 // 1. Grab the arguments the user typed
 const args = process.argv.slice(2);
 
@@ -7,8 +9,11 @@ const command = args[0];
 // 3. The traffic cop (routing)
 switch (command) {
   case 'add':
-    console.log('You want to add a task! The description is:', args[1]);
-    // We will call the addTask() function here later
+    if (!args[1]) {
+      console.log('Error: Please provide a description for the task.');
+    } else {
+      addTask(args[1]);
+    }
     break;
     
   case 'update':
