@@ -56,3 +56,26 @@ export const listTasks = (filterStatus?: string): void => {
   // 4. Print them beautifully to the terminal
   console.table(filteredTasks, ['id', 'description', 'status']);
 };
+
+
+export const updateTask = (id: number, newDescription: string): void => {
+  // 1. READ: Get the current memory
+  const tasks = getTasks();
+
+  // 2. Find the ACTUAL task object, not just its index number
+  const taskToUpdate = tasks.find(task => task.id === id);
+
+  // 3. Edge Case: If find() fails, it returns undefined. We catch that here.
+  if (!taskToUpdate) {
+    console.log(`Error: Task with ID ${id} not found.`);
+    return; // Stop the function immediately
+  }
+
+  // 4. WORK: Update the task directly
+  taskToUpdate.description = newDescription;
+  taskToUpdate.updatedAt = new Date().toISOString();
+
+  // 5. SAVE
+  saveTasks(tasks);
+  console.log(`Task ${id} updated successfully!`);
+};
