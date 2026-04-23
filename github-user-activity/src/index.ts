@@ -1,3 +1,5 @@
+import { fetchActivity } from "./fetchActivity";
+
 const args = process.argv.slice(2);
 const username = args[0];
 
@@ -6,5 +8,5 @@ if(!username){
     process.exit(1);
 }
 
-fetchInfo(username); 
+fetchActivity(username); 
 
