@@ -16,6 +16,7 @@ const numberGame = async() => {
 
     
     let validLevel = false;
+    let chances = 0;
 
     while(!validLevel){
 
@@ -24,16 +25,19 @@ const numberGame = async() => {
         if(level==="1"){
             console.log(`Great! You have selected the Easy difficulty level.`);
             console.log("Let's start the game!");
+            chances = 10;
             validLevel = true;
         }
         else if(level==="2"){
             console.log(`Great! You have selected the Medium difficulty level.`);
             console.log("Let's start the game!");
+            chances = 5;
             validLevel = true;
         }
         else if(level==="3"){
             console.log(`Great! You have selected the Hard difficulty level.`);
             console.log("Let's start the game!");
+            chances = 3;
             validLevel = true;
         }
         else{
