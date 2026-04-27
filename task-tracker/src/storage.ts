@@ -12,7 +12,7 @@ const FILE_PATH = path.join(__dirname, '../tasks.json')
 
 // THE READER
 export const getTasks = (): Task[] => {
-    
+     
     // if the file doesn't exist yet
     if(!fs.existsSync(FILE_PATH)){
         return [];

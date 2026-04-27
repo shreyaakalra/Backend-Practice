@@ -18,6 +18,7 @@ switch(command){
 
         if(!description || amount===undefined || amount<0){
             console.log("Add description and amount!");
+            return;
         }
 
         addExpense(description, amount);
