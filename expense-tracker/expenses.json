@@ -5,5 +5,19 @@
     "amount": 20,
     "createdAt": "2026-04-27T16:13:20.042Z",
     "updatedAt": "2026-04-27T16:13:20.042Z"
+  },
+  {
+    "id": 4,
+    "description": "Lunch",
+    "amount": 20,
+    "createdAt": "27/04/2026",
+    "updatedAt": "27/04/2026"
+  },
+  {
+    "id": 5,
+    "description": "Dinner",
+    "amount": 10,
+    "createdAt": "27/04/2026",
+    "updatedAt": "27/04/2026"
   }
 ]
