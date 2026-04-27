@@ -48,3 +48,5 @@ const numberGame = async() => {
     
     rl.close();
 }
+
+numberGame();
