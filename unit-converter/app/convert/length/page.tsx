@@ -9,10 +9,11 @@ export default function Length(){
                 <input 
                     type="number"
                     className="border-2 border-black mb-6"
+                    name="val"
                 />
 
                 <h2 className="font-black">Unit to Convert from</h2>
-                <select className="border-2 border-black mb-6">
+                <select className="border-2 border-black mb-6" name="from">
                     <option>Meter</option>
                     <option>Millimeter</option>
                     <option>Centimeter</option>
@@ -24,7 +25,7 @@ export default function Length(){
                 </select>
 
                 <h2 className="font-black">Unit to Convert to</h2>
-                <select className="border-2 border-black mb-10">
+                <select className="border-2 border-black mb-10" name="to">
                     <option>Meter</option>
                     <option>Millimeter</option>
                     <option>Centimeter</option>
