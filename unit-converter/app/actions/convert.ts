@@ -26,9 +26,19 @@ export async function convertLength(formData: FormData){
     const fromUnit = formData.get("from");
     const toUnit = formData.get("to");
 
-    console.log("Recieved on backend:", rawValue, fromUnit, toUnit);
+    const lengthRates: Record<string, number> = {
+    Millimeter: 0.001,
+    Centimeter: 0.01,
+    Meter: 1,
+    Kilometer: 1000,
+    Inch: 0.0254,
+    Foot: 0.3048,
+    Yard: 0.9144,
+    Mile: 1609.344
+    };
 
-    
+    const convertToBase = Number(rawValue) * lengthRates[fromUnit as string];
+    const ans = convertToBase / lengthRates[toUnit as string];  
 }
 
 
