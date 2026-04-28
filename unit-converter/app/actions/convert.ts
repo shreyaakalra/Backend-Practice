@@ -47,7 +47,29 @@ export async function convertTemperature(formData: FormData){
     const fromUnit = formData.get("from");
     const toUnit = formData.get("to");
 
-    console.log("Recieved on backend:", rawValue, fromUnit, toUnit);
+    const val = Number(rawValue);
+    let ans = 0;
 
-  
+    if (fromUnit === toUnit) {
+        ans = val; // Same unit, no conversion needed
+    } 
+    else if (fromUnit === "Celsius" && toUnit === "Fahrenheit") {
+        ans = (val * 9/5) + 32;
+    } 
+    else if (fromUnit === "Celsius" && toUnit === "Kelvin") {
+        ans = val + 273.15;
+    } 
+    else if (fromUnit === "Fahrenheit" && toUnit === "Celsius") {
+        ans = (val - 32) * 5/9;
+    } 
+    else if (fromUnit === "Fahrenheit" && toUnit === "Kelvin") {
+        ans = (val - 32) * 5/9 + 273.15;
+    } 
+    else if (fromUnit === "Kelvin" && toUnit === "Celsius") {
+        ans = val - 273.15;
+    } 
+    else if (fromUnit === "Kelvin" && toUnit === "Fahrenheit") {
+        ans = (val - 273.15) * 9/5 + 32;
+    }
+
 }
