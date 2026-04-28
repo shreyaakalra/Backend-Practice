@@ -1,9 +1,10 @@
+import { convertLength} from "@/app/actions/convert";
 import { Button } from "@/components/ui/button";
 
 export default function Length(){
     return(
         <div className="flex items-center justify-center mt-10">
-            <form className="flex flex-col gap-1 w-full max-w-md p-8">
+            <form action={convertLength} className="flex flex-col gap-1 w-full max-w-md p-8">
 
                 <h2 className="font-black">Enter the length to convert</h2>
                 <input 

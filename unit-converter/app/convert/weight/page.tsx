@@ -1,9 +1,10 @@
+import { convertWeight } from "@/app/actions/convert";
 import { Button } from "@/components/ui/button";
 
 export default function Weight(){
     return(
         <div className="flex items-center justify-center mt-10">
-            <form className="flex flex-col gap-1 w-full max-w-md p-8">
+            <form action={convertWeight} className="flex flex-col gap-1 w-full max-w-md p-8">
 
                 <h2 className="font-black">Enter the weight to convert</h2>
                 <input 
