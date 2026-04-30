@@ -1,6 +1,10 @@
 "use server";
 
-export async function convertWeight(formData: FormData){
+export type ConvertState = {
+    result: number | null;
+}
+
+export async function convertWeight(prevState: ConvertState,formData: FormData){
     const rawValue = formData.get("val");
     const fromUnit = formData.get("from") as keyof typeof weightRates;;
     const toUnit = formData.get("to") as keyof typeof weightRates;;
@@ -18,10 +22,12 @@ export async function convertWeight(formData: FormData){
     const convertToBase = Number(rawValue) * weightRates[fromUnit];
     const ans = convertToBase/weightRates[toUnit];
 
+    return {result: ans};
+
 }
 
 
-export async function convertLength(formData: FormData){
+export async function convertLength(prevState: ConvertState,formData: FormData){
     const rawValue = formData.get("val");
     const fromUnit = formData.get("from");
     const toUnit = formData.get("to");
@@ -39,10 +45,12 @@ export async function convertLength(formData: FormData){
 
     const convertToBase = Number(rawValue) * lengthRates[fromUnit as string];
     const ans = convertToBase / lengthRates[toUnit as string];  
+
+    return {result: ans};
 }
 
 
-export async function convertTemperature(formData: FormData){
+export async function convertTemperature(prevState: ConvertState, formData: FormData){
     const rawValue = formData.get("val");
     const fromUnit = formData.get("from");
     const toUnit = formData.get("to");
@@ -71,5 +79,7 @@ export async function convertTemperature(formData: FormData){
     else if (fromUnit === "Kelvin" && toUnit === "Fahrenheit") {
         ans = (val - 273.15) * 9/5 + 32;
     }
+
+    return {result: ans};
 
 }
