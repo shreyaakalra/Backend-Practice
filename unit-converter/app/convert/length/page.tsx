@@ -47,7 +47,6 @@ export default function Length() {
 
         <Button type="submit">Convert</Button>
 
-        {/* 4. Actually display the answer when it comes back! */}
         {state.result !== null && (
           <div className="mt-6 p-4 bg-emerald-100 border-2 border-emerald-500 rounded-md text-center">
             <h3 className="text-xl font-bold text-emerald-900">
