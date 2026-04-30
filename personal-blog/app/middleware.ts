@@ -1,0 +1,1 @@
+// Acts like the bouncer - checks for cookies before allowing /dashboard access
