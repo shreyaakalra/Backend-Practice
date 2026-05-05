@@ -4,6 +4,7 @@
 // 3. but now if they want to see just one article and it's content then you need a function for that too
 // 4. but the admin will be able to do edit and delete and add new articles so we need to create functions for that too
 // basically these are the functions required : generateSlug, add, edit, update, delete 
+"use server"
 
 import path from "path";
 import fs from 'fs/promises';
@@ -29,7 +30,7 @@ async function checkDir(){
 }
 
 // to generate a slug for url name
-export function generateSlug(title: string): string{
+export async function generateSlug(title: string): Promise<string>{
 // 1. need the title for website
 // 2. have to edit the title to make it look like article-2-type-shit
   return title
