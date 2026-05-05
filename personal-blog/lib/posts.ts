@@ -9,6 +9,7 @@
 import path from "path";
 import fs from 'fs/promises';
 import matter from "gray-matter";
+import { revalidatePath } from "next/cache";
 
 export type Post = {
   slug: string;
@@ -91,8 +92,9 @@ export async function showContent(slug: string): Promise<Post | null>{
 
 // to create/edit a post
 export async function createPost(title: string, date: string, content: string ): Promise<string>{
+
   await checkDir();
-  const slug = generateSlug(title);
+  const slug = await generateSlug(title);
   const filePath = path.join(articlesDir, slug+".md");
 
   // matter.stringify converts our data back into a valid markdown
@@ -108,6 +110,7 @@ export async function deletePost(slug: string){
   try{
     const filePath = path.join(articlesDir, slug+".md");
     await fs.unlink(filePath);
+    revalidatePath("/dashboard");
   } catch (error){
     console.error(`Failed to delete post : ${slug}`, error);
   }
