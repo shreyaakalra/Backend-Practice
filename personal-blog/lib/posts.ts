@@ -1,3 +1,5 @@
+// Part of Backend: server actions for CRUD (fs.readFile, fs.writeFile)
+
 // things to do :
 // 1. need a slug for URL name
 // 2. so both admin and guest would get to see all the posts so on that page we first need to make sure there is a way we can see all the posts titles and date created.
@@ -114,4 +116,22 @@ export async function deletePost(slug: string){
   } catch (error){
     console.error(`Failed to delete post : ${slug}`, error);
   }
+}
+
+// to update a post
+export async function updatePost(oldSlug: string, newTitle: string, newDate: string, newContent: string){
+
+  const oldFilePath = path.join(articlesDir,oldSlug+".md");
+  await fs.unlink(oldFilePath);
+
+  const newSlug = generateSlug(newTitle);
+  const newFilePath = path.join("articles", newSlug+".md");
+
+  const fileString = matter.stringify(newContent, {title: newTitle, date: newDate});
+
+  await fs.writeFile(newFilePath, fileString, "utf-8");
+
+  revalidatePath("/");
+
+  return newSlug;
 }
