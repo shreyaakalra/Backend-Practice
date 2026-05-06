@@ -11,7 +11,7 @@ export default async function Home() {
         <div className="text-2xl font-bold py-2">
           PERSONAL BLOG
         </div>
-        <Link href="/add">
+        <Link href="/login">
                 <button className="bg-blue-500 text-white px-4 py-2 rounded font-bold ">
                     Log In
                 </button>

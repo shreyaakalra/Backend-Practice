@@ -78,7 +78,7 @@ export async function showContent(slug: string): Promise<Post | null>{
     const filePath = path.join(articlesDir, slug+".md");
     const fileContent = await fs.readFile(filePath, "utf-8");
 
-    console.log("THE CHEF IS LOOKING HERE:", filePath);
+    // console.log("THE CHEF IS LOOKING HERE:", filePath);
 
     const {data, content} = matter(fileContent)
 
