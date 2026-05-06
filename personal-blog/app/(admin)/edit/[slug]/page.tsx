@@ -8,7 +8,7 @@ import EditPost from "../editForm";
 
 export default async function edit({ params }: { params: { slug: string } }){
     const { slug } = params;
-    const post = await showContent(slug);
+    const post = await showContent(slug+".md");
 
     if(!post){
         return <div>
