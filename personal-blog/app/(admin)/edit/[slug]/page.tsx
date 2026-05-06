@@ -1,14 +1,31 @@
 // Dynamic Route
 // Form pre-filled with existing article data
 
-"use server"
+// form to create new article
 
-import { showContent, updatePost } from "@/lib/posts"
+import {showContent } from "@/lib/posts";
+import EditPost from "../editForm";
 
-export default async function EditPost({params}: {params: {slug: string}}){
-    const post = await showContent(params.slug);
+export default async function edit({ params }: { params: { slug: string } }){
+    const { slug } = params;
+    const post = await showContent(slug);
 
     if(!post){
-
+        return <div>
+            Article Not Found
+        </div>
     }
+
+    const oldTitle = post?.title;
+    const oldDate = post?.date;
+    const oldContent = post?.content;
+
+    return(
+        <EditPost
+        oldTitle={oldTitle}
+        oldDate={oldDate}
+        oldContent={oldContent}
+        oldSlug={slug}
+        />
+    )
 }
