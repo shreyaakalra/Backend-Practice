@@ -15,8 +15,9 @@ export default function EditPost({oldTitle, oldDate, oldContent, oldSlug}:{oldTi
 
     async function postSubmit(){
        await createPost(title, date, content);
-       const slug = await generateSlug(oldSlug);
-       await deletePost(slug);
+       if(title!==oldTitle){
+        await deletePost(oldSlug);
+       }
        router.push('/dashboard');
     }
 

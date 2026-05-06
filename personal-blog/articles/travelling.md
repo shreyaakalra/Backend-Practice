@@ -1,5 +1,5 @@
 ---
 title: travelling
-date: sup
+date: 5th January
 ---
-abcdefghi 
+travelling to hehe sup whatsup

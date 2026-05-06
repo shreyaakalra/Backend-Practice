@@ -78,6 +78,8 @@ export async function showContent(slug: string): Promise<Post | null>{
     const filePath = path.join(articlesDir, slug+".md");
     const fileContent = await fs.readFile(filePath, "utf-8");
 
+    console.log("THE CHEF IS LOOKING HERE:", filePath);
+
     const {data, content} = matter(fileContent)
 
     // 2. show its title, created at, content etc
@@ -87,7 +89,7 @@ export async function showContent(slug: string): Promise<Post | null>{
       date: data.date || "1970-01-01",
       content
     }
-  } catch {
+  } catch{
     return null;
   }
 }
@@ -125,7 +127,7 @@ export async function updatePost(oldSlug: string, newTitle: string, newDate: str
   await fs.unlink(oldFilePath);
 
   const newSlug = generateSlug(newTitle);
-  const newFilePath = path.join("articles", newSlug+".md");
+  const newFilePath = path.join(articlesDir, newSlug+".md");
 
   const fileString = matter.stringify(newContent, {title: newTitle, date: newDate});
 
