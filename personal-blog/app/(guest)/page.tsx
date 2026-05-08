@@ -1,4 +1,4 @@
-// Home page : Lists all the articlesimport { getPosts } from "@/lib/posts";
+// Home page : Lists all the articlesimport { getPosts } from "@/lib/posts"
 
 import { getPosts } from "@/lib/posts";
 import Link from "next/link";
