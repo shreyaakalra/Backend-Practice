@@ -51,7 +51,7 @@ export default function EditPost({oldTitle, oldDate, oldContent, oldSlug}:{oldTi
                 className="border border-3 h-10 border-blue-400 bg-blue-500 font-bold"
                 onClick={postSubmit}
             >
-                Submit
+                Update
             </button>
         </div>
     )
