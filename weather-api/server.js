@@ -17,7 +17,7 @@ const limiter = rateLimit({
 
 app.use(express.json()); // if user sends data in JSON formt it reads and understands instead of panicking
 
- app.use(limiter);
+app.use(limiter);
 
 redisClient.connect(); // connect to redis when the server boots up
 
