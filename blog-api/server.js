@@ -38,6 +38,35 @@ app.post('/posts', (req, res) => {
     }
 })
 
+// reading all posts
+app.get('/posts', (req, res) => {
+    try{
+        res.json(posts);
+    } catch(error){
+        console.log(error);
+        res.json("something's wrong!");
+    }
+})
+
+// reading a specific post 
+app.get('/posts/:id', (req,res) => {
+    try{
+        const id = parseInt(req.params.id);
+        const wantedPost = posts.find((post) => {
+            return post.id === id;
+        })
+
+        if(!wantedPost){
+            return res.status(404).json({error: "No post with this id exists!"});
+        }
+
+        res.status(200).json(wantedPost);
+
+    } catch(error) {
+        console.log(error);
+        res.status(500).json({ error: "Something went wrong!" });    }
+})
+
 app.listen(PORT, () => {
     console.log("Listening at port 5001!")
 })
