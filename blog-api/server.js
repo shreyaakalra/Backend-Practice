@@ -40,8 +40,9 @@ app.post('/posts', (req, res) => {
 })
 
 // reading all posts
-app.get('/posts', (req, res) => {
+app.get('/posts', async(req, res) => {
     try{
+        const allPosts = await db.all('SELECT * FROM posts')
         res.json(posts);
     } catch(error){
         console.log(error);

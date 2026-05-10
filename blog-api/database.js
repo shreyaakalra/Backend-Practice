@@ -1,4 +1,4 @@
-import sqlite from 'sqlite3';
+import sqlite3 from 'sqlite3';
 import { open } from 'sqlite';
 
 // This function opens the connection to our database file
@@ -14,7 +14,7 @@ async function initDB(){
 
 await db.exec(`
     CREATE TABLE IF NOT EXISTS posts (
-        id INTEGER PRIMARY KEY AUTOINCREMENT.
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
         title TEXT NOT NULL,
         content TEXT NOT NULL,
         category TEXT,
