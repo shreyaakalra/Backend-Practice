@@ -68,7 +68,6 @@ app.get('/posts/:id', (req,res) => {
 })
 
 // updating a post
-
 app.put('/posts/:id', (req, res) => {
     try{
         const id = parseInt(req.params.id);
@@ -103,7 +102,26 @@ app.put('/posts/:id', (req, res) => {
     }
 })
 
+// deleting a post
+app.delete('/posts/:id', (req, res) => {
+    try{
+        const id = parseInt(req.params.id);
 
+        const postIndex = posts.findIndex((post) => post.id === id);
+
+        if(postIndex===-1){
+            return res.status(404).json({error: "Not Found"});
+        }
+
+        posts.splice(postIndex, 1);
+
+        res.status(204).send();
+
+    } catch(error){
+        console.log(error);
+        res.status(500).json({error: "uh oh something went wrong!"});
+    }
+} )
 
 app.listen(PORT, () => {
     console.log("Listening at port 5001!")
