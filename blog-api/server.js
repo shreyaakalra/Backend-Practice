@@ -67,6 +67,44 @@ app.get('/posts/:id', (req,res) => {
         res.status(500).json({ error: "Something went wrong!" });    }
 })
 
+// updating a post
+
+app.put('/posts/:id', (req, res) => {
+    try{
+        const id = parseInt(req.params.id);
+
+        const postIndex = posts.findIndex((post) => post.id === id);
+
+        if(postIndex === -1){
+            return res.status(404).json({error: "Post now found."});
+        }
+
+        const {title, content, category, tags } = req.body;
+
+        if(!title || !content){
+            return res.status(400).json({error: "Make sure to ass title and content!"});
+        }
+
+        posts[postIndex] = {
+            id: id,
+            title: title,
+            content: content,
+            category: category,
+            tags: tags,
+            createdAt: posts[postIndex].createdAt,
+            updatedAt: new Date().toISOString()
+        }
+
+        res.status(200).json(posts[postIndex]);
+
+    } catch(error) {
+        console.log(error);
+        res.status(500).json({error: "Oops, something went wrong!"});
+    }
+})
+
+
+
 app.listen(PORT, () => {
     console.log("Listening at port 5001!")
 })
