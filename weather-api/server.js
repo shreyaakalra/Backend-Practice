@@ -2,11 +2,22 @@ import 'dotenv/config';
 import axios from 'axios';
 import express from 'express';
 import redisClient from './redisClient.js';
+import { rateLimit } from 'express-rate-limit';
 
 const app = express(); // builds the server
 const PORT = process.env.PORT || 5001; // decides which door the server will listen to
 
+const limiter = rateLimit({
+    windowMs: 60 * 1000,
+    limit: 5,
+    standardHeaders: 'draft-8',
+    legacyHeaders: false,
+    ipv6Subnet: 56,
+})
+
 app.use(express.json()); // if user sends data in JSON formt it reads and understands instead of panicking
+
+ app.use(limiter);
 
 redisClient.connect(); // connect to redis when the server boots up
 
@@ -15,6 +26,7 @@ redisClient.connect(); // connect to redis when the server boots up
 app.get("/api/weather/:city", async (req, res) => {
     // try to run this code and if anything crashes dont shut down just jump to the catch block instead.
     try{
+
         const city = req.params.city.toLowerCase();
 
         const cacheKey = `weather:${city}`;
@@ -41,7 +53,6 @@ app.get("/api/weather/:city", async (req, res) => {
         const weatherRes = await axios.get(`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${process.env.WEATHER_API_KEY}&units=metric`);
 
         // The Delivery. You hand the final weather data back to the user's browser. The moment this line runs, the user sees the JSON on their screen.
-        res.json(weatherRes.data);
 
         await redisClient.set(
             cacheKey, // the key:   "weather:london"
@@ -50,6 +61,8 @@ app.get("/api/weather/:city", async (req, res) => {
         )
 
         // After 10 minutes, Redis auto-deletes it. Next request fetches fresh data.
+
+        res.json(weatherRes.data);
 
     } catch (error) {
         console.error("The API crashed", error.message);
