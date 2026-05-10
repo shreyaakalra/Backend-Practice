@@ -1,11 +1,12 @@
 import express from 'express';
+import initDB from './database.js'
 
 const app = express();
 const PORT = 5001;
 
 app.use(express.json());
 
-let posts = [];
+let db;
 
 // creating a post
 app.post('/posts', (req, res) => {
@@ -123,6 +124,9 @@ app.delete('/posts/:id', (req, res) => {
     }
 } )
 
-app.listen(PORT, () => {
-    console.log("Listening at port 5001!")
+initDB().then((databaseInstance) => {
+    db = databaseInstance;
+    app.listen(PORT, () => {
+        console.log(`Listening at port ${PORT}! Database connected.`)
+    });
 })
