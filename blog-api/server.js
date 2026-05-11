@@ -57,15 +57,18 @@ app.get('/posts', async(req, res) => {
 })
 
 // reading a specific post 
-app.get('/posts/:id', (req,res) => {
+app.get('/posts/:id', async(req,res) => {
     try{
         const id = parseInt(req.params.id);
-        const wantedPost = posts.find((post) => {
-            return post.id === id;
-        })
+
+        const wantedPost = await db.get('SELECT * FROM posts WHERE id = ?', [id]);
 
         if(!wantedPost){
             return res.status(404).json({error: "No post with this id exists!"});
+        }
+
+        if(wantedPost.tags){
+            wantedPost.tags = JSON.parse(wantedPost.tags);
         }
 
         res.status(200).json(wantedPost);
