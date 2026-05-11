@@ -9,7 +9,7 @@ app.use(express.json());
 let db;
 
 // creating a post
-app.post('/posts', (req, res) => {
+app.post('/posts', async(req, res) => {
     try{
 
         const {title, content, category, tags} = req.body;
@@ -18,19 +18,25 @@ app.post('/posts', (req, res) => {
             return res.status(400).json("uh oh make sure to enter a title and body!");
         }
 
-        const newId = posts.length + 1;
+        const createdAt = new Date().toISOString();
+        const updatedAt = new Date().toISOString();
+
+        const tagsString = JSON.stringify(tags || []);
+
+        const result = await db.run(
+            `INSERT INTO posts (title, content, category, tags, createdAt, updatedAt) VALUES(?, ?, ?, ?, ?, ?)`,
+            [title, content, category, tagsString, createdAt, updatedAt]
+        );
 
         const newPost = {
-            id: newId,
+            id: result.lastID,
             title,
             content,
             category,
             tags,
-            createdAt: new Date().toISOString(),
-            updatedAt: new Date().toISOString()
+            createdAt,
+            updatedAt
         }
-
-        posts.push(newPost);
 
         res.status(201).json(newPost);
 
@@ -43,7 +49,7 @@ app.post('/posts', (req, res) => {
 app.get('/posts', async(req, res) => {
     try{
         const allPosts = await db.all('SELECT * FROM posts')
-        res.json(posts);
+        res.json(allPosts);
     } catch(error){
         console.log(error);
         res.json("something's wrong!");
