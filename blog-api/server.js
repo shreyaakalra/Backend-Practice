@@ -79,33 +79,36 @@ app.get('/posts/:id', async(req,res) => {
 })
 
 // updating a post
-app.put('/posts/:id', (req, res) => {
+app.put('/posts/:id', async(req, res) => {
     try{
         const id = parseInt(req.params.id);
-
-        const postIndex = posts.findIndex((post) => post.id === id);
-
-        if(postIndex === -1){
-            return res.status(404).json({error: "Post now found."});
-        }
-
         const {title, content, category, tags } = req.body;
 
         if(!title || !content){
             return res.status(400).json({error: "Make sure to ass title and content!"});
         }
 
-        posts[postIndex] = {
-            id: id,
-            title: title,
-            content: content,
-            category: category,
-            tags: tags,
-            createdAt: posts[postIndex].createdAt,
-            updatedAt: new Date().toISOString()
+        const updatedAt = new Date().toISOString();
+        const tagsString = JSON.stringify(tags || []);
+
+        const result = await db.run(
+            `UPDATE posts
+            SET title = ?, content = ?, category = ?, tags = ?, updatedAt = ?
+            WHERE id = ?`,
+            [title, content, category, tagsString, updatedAt, id]
+        )
+
+        if(result.changes === 0){
+            return res.status(404).json({error: "Post not found!"});
         }
 
-        res.status(200).json(posts[postIndex]);
+        const updatedPost = await db.get('SELECT * FROM posts WHERE id = ?', [id]);
+
+        if(updatedPost.tags){
+            updatedPost.tags = JSON.parse(updatedPost.tags);
+        }
+
+        res.status(200).json(updatedPost);
 
     } catch(error) {
         console.log(error);
@@ -114,17 +117,15 @@ app.put('/posts/:id', (req, res) => {
 })
 
 // deleting a post
-app.delete('/posts/:id', (req, res) => {
+app.delete('/posts/:id', async(req, res) => {
     try{
         const id = parseInt(req.params.id);
 
-        const postIndex = posts.findIndex((post) => post.id === id);
+        const result = await db.run('DELETE FROM posts WHERE id = ?', [id]);
 
-        if(postIndex===-1){
-            return res.status(404).json({error: "Not Found"});
+        if (result.changes === 0) {
+            return res.status(404).json({ error: "Not Found" });
         }
-
-        posts.splice(postIndex, 1);
 
         res.status(204).send();
 
