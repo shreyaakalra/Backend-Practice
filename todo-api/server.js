@@ -8,6 +8,12 @@ app.use(express.json());
 
 connectDB();
 
+app.post(('/sign-up'), (req,res) => {
+    const {email, password} = req.body;
+
+    
+})
+
 app.listen(PORT, ()=>{
     console.log("Server is Listening at port 5001!");
 })
