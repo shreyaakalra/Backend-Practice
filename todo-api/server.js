@@ -1,9 +1,11 @@
 import express from "express";
-import connectDB from "./db.js";
-import User from "./models/User.js";
-import 'dotenv/config';
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import 'dotenv/config';
+import { body, validationResult } from 'express-validator';
+
+import connectDB from "./db.js";
+import User from "./models/User.js";
 import Todo from './models/Todo.js'
 import authMiddleware from './middleware/authMiddleware.js'
 
@@ -14,8 +16,18 @@ app.use(express.json());
 
 connectDB();
 
-app.post('/sign-up', async(req,res) => {
+app.post('/sign-up', [
+    body('email').isEmail().withMessage('Invalid email'),
+    body('password').isLength({min:6}).withMessage('Min 6 characters.'),
+    body('name').notEmpty().withMessage('Name is required')
+], async(req,res) => {
     try{
+        // validation errors
+        const errors = validationResult(req);
+        if(!errors.isEmpty()){
+            return res.status(400).json({errors: errors.array()});
+        }
+
         // taking name email and pass from body
         const { name, email, password } = req.body;
 
@@ -56,8 +68,17 @@ app.post('/sign-up', async(req,res) => {
     }
 })
 
-app.post('/login', async(req, res) => {
+app.post('/login', [
+    body('email').notEmpty().withMessage("Email can't be empty"),
+    body('password').notEmpty().withMessage("Password can't be empty")
+],async(req, res) => {
     try{
+        // validation errors
+        const errors = validationResult(req);
+        if(!errors.isEmpty()){
+            return res.status(400).json({errors: errors.array()});
+        }
+
         // get access of token from the body
         const { email, password } = req.body;
 
@@ -93,8 +114,17 @@ app.post('/login', async(req, res) => {
     }
 });
 
-app.post('/todos', authMiddleware, async(req, res) => {
+app.post('/todos', authMiddleware, [
+    body('title').notEmpty().withMessage("Title cannot be empty!"),
+    body('description').notEmpty().withMessage("Description cannot be empty")
+], async(req, res) => {
     try{
+        // validation errors
+        const errors = validationResult(req);
+        if(!errors.isEmpty()){
+            return res.status(400).json({errors: errors.array()});
+        }
+
         const {title, description} = req.body;
 
         const newTodo = new Todo({
@@ -121,8 +151,17 @@ app.get('/todos', authMiddleware, async(req, res) => {
     }
 })
 
-app.put('/todos/:id', authMiddleware, async(req, res) => {
+app.put('/todos/:id', authMiddleware, [
+    body('title').optional().notEmpty().withMessage("Title cannot be empty!"),
+    body('description').optional().notEmpty().withMessage("Description cannot be empty")
+], async(req, res) => {
     try{
+
+        // validation errors
+        const errors = validationResult(req);
+        if(!errors.isEmpty()){
+            return res.status(400).json({errors: errors.array()});
+        }
 
         // getting new title and description
         const {title, description} = req.body;
