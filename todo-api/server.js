@@ -4,6 +4,8 @@ import User from "./models/User.js";
 import 'dotenv/config';
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import Todo from './models/Todo.js'
+import authMiddleware from './middleware/authMiddleware.js'
 
 const app = express();
 const PORT = 5001;
@@ -90,7 +92,9 @@ app.post('/login', async(req, res) => {
     } catch(err){
         res.status(500).json({err: "Something went wrong"});
     }
-})
+});
+
+
 
 app.listen(PORT, ()=>{
     console.log("Server is Listening at port 5001!");
