@@ -88,6 +88,25 @@ app.post('/login', async(req, res) => {
         // return a token to the frontend
         res.status(300).json({token});
 
+        app.post('/todos', authMiddleware, async(req, res) => {
+    try{
+        const {title, description} = req.body;
+
+        const newTodo = new Todo({
+            title,
+            description,
+            owner: req.user.id  // comes from authMiddleware
+        });
+
+        await newTodo.save();
+        res.status(201).json(newTodo);
+
+    } catch(err){
+        res.status(500).json({message: "Something went wrong!"});
+    }
+});
+
+
 
     } catch(err){
         res.status(500).json({err: "Something went wrong"});
