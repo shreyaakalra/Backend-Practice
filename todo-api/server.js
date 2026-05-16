@@ -121,6 +121,60 @@ app.get('/todos', authMiddleware, async(req, res) => {
     }
 })
 
+app.put('/todos/:id', authMiddleware, async(req, res) => {
+    try{
+
+        // getting new title and description
+        const {title, description} = req.body;
+
+        // getting the todo that needs to be updated
+        const todo = await Todo.findById(req.params.id);
+
+        // check if todo exists
+        if(!todo){
+            return res.status(404).json({ message: "Todo not found"});
+        }
+
+        // check if the todo owner is the one who's actually logged in
+        if(todo.owner.toString() !== req.user.id){
+            return res.status(403).json({ message: "Not authorized!"});
+        }
+
+        // update the todo
+        const updatedTodo = await Todo.findByIdAndUpdate(
+            req.params.id,
+            { title, description },
+            { new: true }
+        );
+
+        res.status(200).json(updatedTodo);
+
+    } catch(err){
+        res.status(500).json({ message: "Something went wrong!" });
+    }
+})
+
+app.delete('/todos/:id', authMiddleware, async(req, res) => {
+
+    try{
+        const todo = await Todo.findById(req.params.id);
+
+        if(!todo){
+            return res.status(404).json({message: "todo not found!"});
+        }
+
+        if(todo.owner.toString() !== req.user.id){
+            return res.status(403).json({message: "Not authorized!"});
+        }
+
+        await Todo.findByIdAndDelete(req.params.id);
+        res.status(200).json({message: "Todo deleted"});
+
+    } catch(err){
+        res.status(500).json({message: "something went wrong!"});
+    }
+    
+})
 
 app.listen(PORT, ()=>{
     console.log("Server is Listening at port 5001!");
