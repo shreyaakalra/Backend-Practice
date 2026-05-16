@@ -88,7 +88,12 @@ app.post('/login', async(req, res) => {
         // return a token to the frontend
         res.status(300).json({token});
 
-        app.post('/todos', authMiddleware, async(req, res) => {
+    } catch(err){
+        res.status(500).json({err: "Something went wrong"});
+    }
+});
+
+app.post('/todos', authMiddleware, async(req, res) => {
     try{
         const {title, description} = req.body;
 
@@ -106,13 +111,15 @@ app.post('/login', async(req, res) => {
     }
 });
 
-
+app.get('/todos', authMiddleware, async(req, res) => {
+    try{
+        const todos = await Todo.find({userId: req.user.id});
+        res.status(200).json(todos);
 
     } catch(err){
-        res.status(500).json({err: "Something went wrong"});
+        res.status(500).json({message: "Something went wrong"});
     }
-});
-
+})
 
 
 app.listen(PORT, ()=>{
