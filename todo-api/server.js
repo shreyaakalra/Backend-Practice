@@ -15,14 +15,14 @@ connectDB();
 app.post('/sign-up', async(req,res) => {
     try{
         // taking name email and pass from body
-        const {name, email, password} = req.body;
+        const { name, email, password } = req.body;
 
         // checking if user already exists
         const reqEmail = await User.findOne({email});
 
         // if it exists send status 400
         if(reqEmail){
-            return res.status(400).json("User already exists!");
+            return res.status(400).json("User already exists. Try logging in instead!");
         }
 
         // if doesn't exist then bcrypt the password and put the crypted pass in hashedPass
@@ -50,7 +50,45 @@ app.post('/sign-up', async(req,res) => {
         res.status(201).json({token});
 
     } catch(err){
-        res.status(500).json("Something went wrong!")
+        res.status(500).json({error: "Something went wrong!"})
+    }
+})
+
+app.post('/login', async(req, res) => {
+    try{
+        // get access of token from the body
+        const { email, password } = req.body;
+
+        // check if user already exists
+        const user = await User.findOne({ email });
+
+        // if it doesnt return invalid details
+        if(!user){
+            return res.status(404).json({message: "Invalid credentials"});
+        }
+
+        // if email exists check if password is correct
+        const isMatch = await bcrypt.compare(password, user.password);
+
+
+        // if wrong pass
+        if(!isMatch){
+            return res.status(400).json({message: "Incorrect Password"});
+        }
+
+        // create a token again
+        const token = jwt.sign(
+            {id: user._id},
+            process.env.JWT_SECRET,
+            {expiresIn: '1h'}
+        )
+
+        // return a token to the frontend
+        res.status(300).json({token});
+
+
+    } catch(err){
+        res.status(500).json({err: "Something went wrong"});
     }
 })
 
