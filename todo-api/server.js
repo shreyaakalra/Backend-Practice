@@ -1,6 +1,7 @@
 import express from "express";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import mongoose from "mongoose";
 import 'dotenv/config';
 import { body, validationResult } from 'express-validator';
 
@@ -142,9 +143,26 @@ app.post('/todos', authMiddleware, [
 });
 
 app.get('/todos', authMiddleware, async(req, res) => {
+    const page = parseInt(req.query.page) || 1;
+    const limit  = parseInt(req.query.limit) || 10;
+
+    const skip = (page-1) * limit;
+
     try{
-        const todos = await Todo.find({owner: req.user.id});
-        res.status(200).json(todos);
+        const todos = await Todo.find({owner: req.user.id})
+            .skip(skip)
+            .limit(limit);
+
+        const total = await Todo.countDocuments({owner: req.user.id});
+
+        res.status(200).json({
+            todos,
+            pagination: {
+                page,
+                limit,
+                total
+            }
+        });
 
     } catch(err){
         res.status(500).json({message: "Something went wrong"});
