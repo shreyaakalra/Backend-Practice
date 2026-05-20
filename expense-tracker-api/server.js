@@ -1,14 +1,17 @@
 import express from "express";
-
+import connectDB from "./db.js"
 const app = express();
 let PORT = 5001;
+
+connectDB();
 
 app.get(express.json());
 
 // sign-up route
 app.post('/sign-up', (req, res) => {
     try{
-
+        const email = req.headers.email;
+        const pass = req.headers.password;
     } catch(err){
 
     }
