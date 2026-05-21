@@ -10,6 +10,7 @@ app.get(express.json());
 // sign-up route
 app.post('/sign-up', (req, res) => {
     try{
+        const name = req.headers.name;
         const email = req.headers.email;
         const pass = req.headers.password;
     } catch(err){
