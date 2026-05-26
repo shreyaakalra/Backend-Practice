@@ -15,7 +15,9 @@ const PORT = 5001;
 
 app.use(express.json());
 
-connectDB();
+if (process.env.NODE_ENV !== 'test') {
+    connectDB();
+}
 
 app.post('/sign-up', [
     body('email').isEmail().withMessage('Invalid email'),
@@ -233,6 +235,10 @@ app.delete('/todos/:id', authMiddleware, async(req, res) => {
     
 })
 
-app.listen(PORT, ()=>{
-    console.log("Server is Listening at port 5001!");
-})
+if(process.env.NODE_ENV !== "test"){
+    app.listen(PORT, ()=>{
+        console.log("server is listening at port 5001");
+    })
+}
+
+export default app; // so that supertest can use it
