@@ -12,11 +12,14 @@ const expenseSchema = new Schema({
     },
     category: {
         type: String,
-        required: true
+        required: true,
+        enum: ['groceries', 'leisure', 'electronics', 'utilities', 'clothing', 'health', 'others'],
+        default: 'others'
     },
     owner: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "User"
+        ref: "User",
+        required: true
     }
 
 },{

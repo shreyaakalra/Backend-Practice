@@ -47,7 +47,7 @@ app.post('/sign-up', async (req, res)=>{
         const token = jwt.sign(
             {id: newUser._id},
             process.env.PRIVATE_KEY,
-            {expiresIn: "1h"}
+            {expiresIn: "6h"}
         )
 
         res.status(200).json({token});
@@ -86,7 +86,7 @@ app.post('/login', async(req, res) => {
         const token = jwt.sign(
             {id: user._id},
             process.env.PRIVATE_KEY,
-            {expiresIn: '1h'}
+            {expiresIn: '6h'}
         )
 
         res.status(200).json({token});
@@ -102,8 +102,8 @@ app.post('/login', async(req, res) => {
 app.get('/expenses{/:filter}', authMiddleware, async(req, res) => {
     try{
         const filter = req.params.filter;
-        const user = req.user._id;
-        const expenses = await Expenses.find({user: user});
+        const user = req.user.id;
+        const expenses = await Expenses.find({owner: user});
 
         if(expenses.length === 0){
             return res.status(200).json({
@@ -133,31 +133,50 @@ app.get('/expenses{/:filter}', authMiddleware, async(req, res) => {
 });
 
 // create expense
-app.post('/add-expense', (req, res) => {
+app.post('/add-expense', authMiddleware, async(req, res) => {
     try{
+        
+        const { title, moneySpent, category } = req.body;
+
+        const user = req.user.id;
+
+        if(!title || !moneySpent){
+            return res.status(400).json({
+                error: "make sure you have added title, moneyspent and category!"
+            })
+        }
+
+        const newExpense = new Expenses({
+            title,
+            moneySpent,
+            category: category? category.toLowerCase() : "others",
+            owner: user
+        })
+
+        await newExpense.save();
+
+        res.status(200).json({
+            message: "Expense created!"
+        })
 
     } catch(err){
-
+        res.status(500).json({
+            error: "Internal Server Error"
+        })
+        console.log(err);
     }
 });
 
 // update expense
-app.put('/update-expense/:id', (req, res) => {
+app.put('/update-expense/:id', authMiddleware, async(req, res) => {
     try{
-
+        
     } catch(err){
 
     }
 });
 
-// delete expense
-app.delete('/delete-expense/:id', (req, res) => {
-    try{
 
-    } catch(err){
-
-    }
-});
 
 
 
