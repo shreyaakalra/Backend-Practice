@@ -170,9 +170,53 @@ app.post('/add-expense', authMiddleware, async(req, res) => {
 // update expense
 app.put('/update-expense/:id', authMiddleware, async(req, res) => {
     try{
+        const user = req.user.id;
+        const expenseID = req.params.id;
+
+        if(!expenseID){
+            return res.status(401).json({
+                message: "Pls send a valid id"
+            });
+        }
+
+        const expense = await Expenses.findById(expenseID);
+
+        if(!expense){
+            return res.status(401).json({
+                message: "expense doesnt exist."
+            })
+        }
+
+        if(expense.owner.toString() !== user){
+            res.status(401).json({
+                message: "you're not authorized"
+            })
+        }
+
+        const { title, category, moneySpent } = req.body;
+
+        if(!title || !moneySpent){
+            return res.status(401).json({
+                    message: "add title and moneyspent"
+                })
+        }
+
+        await Expenses.findByIdAndUpdate(expenseID, {
+            title,
+            moneySpent,
+            category: category ? category.toLowerCase() : expense.category,
+            owner: user
+        })
+
+        res.status(200).json({
+            message: "Updated"
+        })
         
     } catch(err){
-
+        res.status(500).json({
+            Message: "Internal Server Error"
+        })
+        console.log(err);
     }
 });
 
