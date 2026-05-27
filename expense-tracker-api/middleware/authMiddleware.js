@@ -1,5 +1,5 @@
-import jwt from jsonwebtoken;
-import 'dotenv/configure';
+import jwt from "jsonwebtoken";
+import 'dotenv/config';
 
 
 export default function authMiddleware(req, res, next){

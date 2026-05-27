@@ -1,6 +1,5 @@
 import mongoose from "mongoose";
 const { Schema } = mongoose;
-import User from "./User.js"
 
 const expenseSchema = new Schema({
     title: {
@@ -24,4 +23,5 @@ const expenseSchema = new Schema({
     timestamps: true
 })
 
-const Expense = mongoose.model("Expense". ExpenseSchema);
+const Expenses = mongoose.model("Expenses", expenseSchema);
+export default Expenses;

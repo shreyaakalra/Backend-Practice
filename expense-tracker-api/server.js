@@ -4,6 +4,8 @@ import bcrypt from "bcrypt"
 import "dotenv/config"
 import User from "./models/User.js"
 import jwt from "jsonwebtoken"
+import authMiddleware from "./middleware/authMiddleware.js"
+import Expenses from "./models/Expenses.js"
 
 const app = express();
 let PORT = 5001;
@@ -97,11 +99,36 @@ app.post('/login', async(req, res) => {
 });
 
 // get expenses
-app.get('/expenses/:filter', (req, res) => {
+app.get('/expenses{/:filter}', authMiddleware, async(req, res) => {
     try{
-        
-    } catch(err){
+        const filter = req.params.filter;
+        const user = req.user._id;
+        const expenses = await Expenses.find({user: user});
 
+        if(expenses.length === 0){
+            return res.status(200).json({
+                "expenses": expenses
+            });
+        }
+
+        if(!filter){
+            return res.status(200).json({
+                "expenses": expenses 
+            });
+        }
+
+        const filteredExpenses = expenses.filter((expense) => expense.category === filter);
+
+        res.status(200).json({
+            "expenses": filteredExpenses
+        });
+
+
+    } catch(err){
+        res.status(500).json({
+            error: "Internal Server Error"
+        })
+        console.log(err);
     }
 });
 
