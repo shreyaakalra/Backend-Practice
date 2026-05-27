@@ -176,7 +176,39 @@ app.put('/update-expense/:id', authMiddleware, async(req, res) => {
     }
 });
 
+// delete expense
+app.delete('/delete-expense/:id', authMiddleware, async(req, res) => {
+    try{
+        const user = req.user.id;
+        const expenseID = req.params.id;
+        
+        const expense = await Expenses.findById(expenseID);
 
+        if(!expense){
+            return res.status(400).json({
+                message: "no expense with this id exists"
+            })
+        }
+
+        if(expense.owner.toString()!==user){
+            return res.status(403).json({
+                message: "you're not authorized"
+            })
+        }
+
+        await Expenses.findByIdAndDelete(expenseID);
+
+        res.status(201).json({
+            message: "Deleted Successfully"
+        })
+
+    } catch(err){
+        res.status(500).json({
+            message: "Internal Server Error"
+        });
+        console.log(err);
+    }
+});
 
 
 
